@@ -4,6 +4,7 @@
 #include <fstream>
 #include <algorithm>
 #include <sstream>
+#include <iomanip>
 using namespace std;
 class Personne {
 protected:
@@ -194,7 +195,7 @@ void Gestion::creer_fichier() {
         return;
        
     }
-    ofstream fichier("etudiants.txt", ios::out);
+    ofstream fichier("etudiants.txt",ios::app);
 
     if (fichier) {
         for (Etudiant& etudiant : etudiants) {
@@ -308,29 +309,78 @@ public:
 };
 
 int main() {
-    Personne* personnes[4];
+    // Personne* personnes[4];
 
-    personnes[1] = new Professeur(2, "Martin", "Jean", "Mathematiques");
-    personnes[1]->afficher();
-    personnes[2] = new Personnel(3, "Lefevre", "Marie", "Ressources Humaines");
-    personnes[2]->afficher();
-    personnes[3] = new Etudiant(1, "Jhon", "batiste");
-    Etudiant* etudiant_ptr = dynamic_cast<Etudiant*>(personnes[3]);
-    etudiant_ptr->ajouterNote("maths",14,12);
-    etudiant_ptr->ajouterNote("francais",18,12);
-    personnes[3]->afficher();
+    // personnes[1] = new Professeur(2, "Martin", "Jean", "Mathematiques");
+    // personnes[1]->afficher();
+    // personnes[2] = new Personnel(3, "Lefevre", "Marie", "Ressources Humaines");
+    // personnes[2]->afficher();
+    // personnes[3] = new Etudiant(1, "Jhon", "batiste");
+    // Etudiant* etudiant_ptr = dynamic_cast<Etudiant*>(personnes[3]);
+    // etudiant_ptr->ajouterNote("maths",14,12);
+    // etudiant_ptr->ajouterNote("francais",18,12);
+    // personnes[3]->afficher();
+
+  Gestion gestion;
+    int choix = 0;
+
+    do {
+        // clear the console screenX
 
 
+        // print the ASCII interface
+        cout << "+-------------------------------------------+" << endl;
+        cout << "|          GESTION DES ETUDIANTS            |" << endl;
+        cout << "+-------------------------------------------+" << endl;
+        cout << "| Que voulez-vous faire ?                   |" << endl;
+        cout << "|                                           |" << endl;
+        cout << "| 1. Saisir un etudiant                     |" << endl;
+        cout << "| 2. Creer le fichier des etudiants          |" << endl;
+        cout << "| 3. Creer le fichier des etudiants reussis  |" << endl;
+        cout << "| 4. Afficher les etudiants reussis          |" << endl;
+        cout << "| 5. Quitter                                |" << endl;
+        cout << "+-------------------------------------------+" << endl;
+        cout << endl;
 
-    Gestion supcom;
-    supcom.charger_fichier();
-    supcom.saisir_etudiant();
-    supcom.creer_fichier();
-    supcom.etudiants_reussis();
-    supcom.Affiche();
+        // read the user's choice
+        cout << "Votre choix : ";
+        cin >> choix;
 
+        switch (choix) {
+            case 1:
+                
+                gestion.charger_fichier();
+                gestion.saisir_etudiant();
+                break;
+            case 2:
+                
+                gestion.creer_fichier();
+                break;
+            case 3:
+                
+                gestion.etudiants_reussis();
+                break;
+            case 4:
+                
+                gestion.Affiche();
+                break;
+            case 5:
+                cout << endl << "Au revoir !" << endl;
+                break;
+            default:
+                cerr << "Erreur : choix invalide" << endl;
+                break;
+        }
+
+        // pause the program to let the user read the output
+        cout << endl << "Appuyez sur une touche pour continuer...";
+        cin.get();
+        cin.ignore();
+
+    } while (choix != 5);
 
     return 0;
+
 }
 
 
