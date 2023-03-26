@@ -12,7 +12,7 @@ protected:
     string prenom;
 public:
     Personne(int i, string n, string p) : id(i), nom(n), prenom(p) { }
-    void afficher() {
+    virtual void afficher() {
         cout << "Identifiant : " << id << endl;
         cout << "Nom : " << nom << endl;
         cout << "Prenom : " << prenom << endl;
@@ -131,8 +131,8 @@ void Gestion::charger_fichier() {
 
             // Lecture des notes de l'étudiant
             string matiere;
-            double note_controle, note_examen;
-            while (ss >> matiere >> note_controle >> note_examen) {
+            double note_controle, note_examen,moyenne;
+            while (ss >> matiere >> note_controle >> note_examen >> moyenne) {
                 etudiant.ajouterNote(matiere, note_controle, note_examen);
             }
 
@@ -188,7 +188,7 @@ void Gestion::saisir_etudiant() {
 }
 
 void Gestion::creer_fichier() {
-    ofstream fichier("etudiants.txt", ios::app);
+    ofstream fichier("etudiants.txt");
 
     if (fichier) {
         for (Etudiant& etudiant : etudiants) {
@@ -208,10 +208,42 @@ void Gestion::creer_fichier() {
 }
 
 void Gestion::etudiants_reussis() {
-    ofstream fichier("res.txt");
+    ifstream fichier("res.txt");
 
     if (fichier) {
-        // Trier les étudiants par moyenne croissante
+        // On vide le vecteur d'étudiants pour éviter d'avoir des doublons
+        etudiants.clear();
+
+        // Lecture du fichier ligne par ligne
+        string ligne;
+        while (getline(fichier, ligne)) {
+            stringstream ss(ligne);
+            int id;
+            string nom, prenom;
+            ss >> id >> nom >> prenom;
+            Etudiant etudiant(id, nom, prenom);
+
+            // Lecture des notes de l'étudiant
+            string matiere;
+            double note_controle, note_examen;
+            while (ss >> matiere >> note_controle >> note_examen) {
+                etudiant.ajouterNote(matiere, note_controle, note_examen);
+            }
+                // Ajout de l'étudiant au vecteur d'étudiants
+            etudiants.push_back(etudiant);
+        }
+        fichier.close(); // closing the file inside the if block
+    } else {
+        cerr << "Erreur : impossible de lire le fichier." << endl;
+    }
+
+
+
+    
+    ofstream fichier("res.txt");
+    
+    if (fichier) {
+       
         sort(etudiants.begin(), etudiants.end(), [](const Etudiant& a, const Etudiant& b) {
             return a.Moyenne() < b.Moyenne();
         });
@@ -221,7 +253,7 @@ void Gestion::etudiants_reussis() {
             if (etudiant.Moyenne() >= 10.0) {
                 fichier << etudiant.getId() << " " << etudiant.getNom() << " " << etudiant.getPrenom() << " ";
                 for (Note& note : etudiant.getNote()) {
-                    fichier << note.getNoteControle() << " " << note.getNoteExamen() << " ";
+                    fichier << note.getMatiereNom() << " " << note.getNoteControle() << " " << note.getNoteExamen() << " ";
                 }
                 fichier << endl;
             }
@@ -271,10 +303,23 @@ public:
 };
 
 int main() {
-  
+    Personne* personnes[4];
+
+    personnes[1] = new Professeur(2, "Martin", "Jean", "Mathematiques");
+    personnes[1]->afficher();
+    personnes[2] = new Personnel(3, "Lefevre", "Marie", "Ressources Humaines");
+    personnes[2]->afficher();
+    personnes[3] = new Etudiant(1, "Jhon", "batiste");
+    Etudiant* etudiant_ptr = dynamic_cast<Etudiant*>(personnes[3]);
+    etudiant_ptr->ajouterNote("maths",14,12);
+    etudiant_ptr->ajouterNote("francais",18,12);
+    personnes[3]->afficher();
+
 
     Gestion supcom;
     supcom.charger_fichier();
+    supcom.saisir_etudiant();
+    supcom.creer_fichier();
     supcom.etudiants_reussis();
     supcom.Affiche();
 

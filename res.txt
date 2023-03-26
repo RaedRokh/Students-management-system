@@ -1,1 +1,2 @@
-1 jhon smith 12 19 
+1 jhon smith francais 12 19 maths 13 15 
+
