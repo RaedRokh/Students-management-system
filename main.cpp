@@ -19,17 +19,22 @@ public:
 };
 class Note {
 public:
-    Note(double ncc, double nex);
+    Note(string matiere,double ncc, double nex);
+    string getMatiereNom() const;
     double getNoteControle() const;
     double getNoteExamen() const;
 
 private:
+    string matiere; //nom de la matiere
     double ncc;  // note de contrôle continu
     double nex;  // note d'examen
 };
 
-Note::Note(double ncc, double nex) : ncc(ncc), nex(nex) {}
+Note::Note(string matiere,double ncc, double nex) :matiere(matiere), ncc(ncc), nex(nex) {}
 
+string Note::getMatiereNom() const {
+    return matiere;
+}
 double Note::getNoteControle() const {
     return ncc;
 }
@@ -44,10 +49,9 @@ public:
     int getId() const;
     string getNom() const;
     string getPrenom() const;
-    double Moyenne() const;
     vector<Note> getNote() const;
-    void ajouterNote(double ncc, double nex);
-    double Moyenne();
+    void ajouterNote(string matiere,double ncc, double nex);
+    double Moyenne() const;
     void afficher();
 
 private:
@@ -88,8 +92,8 @@ vector<Note> Etudiant::getNote() const {
     return notes;
 }
 
-void Etudiant::ajouterNote(double ncc, double nex) {
-    notes.push_back(Note(ncc, nex));
+void Etudiant::ajouterNote(string matiere,double ncc, double nex) {
+    notes.push_back(Note(matiere, ncc, nex));
 }
 
 class Gestion {
@@ -130,7 +134,7 @@ void Gestion::creer_fichier() {
         for (Etudiant& etudiant : etudiants) {
             fichier << etudiant.getId() << " " << etudiant.getNom() << " " << etudiant.getPrenom() << " ";
             for (Note& note : etudiant.getNote()) {
-                fichier << note.getNoteControle() << " " << note.getNoteExamen() << " ";
+                fichier <<note.getMatiereNom()<< " " << note.getNoteControle() << " " << note.getNoteExamen() << " ";
             }
             fichier << endl;
         }
@@ -183,21 +187,47 @@ void Gestion::Affiche() {
         cerr << "Erreur : impossible de lire le fichier." << endl;
     }
 }
+class Professeur : public Personne {
+private:
+    string cours;
+public:
+    Professeur(int i, string n, string p, string c) : Personne(i, n, p), cours(c) {}
+    void afficher() {
+        Personne::afficher();
+        cout << "Cours : " << cours << endl;
+    }
+};
+
+class Personnel : public Personne {
+private:
+    string metier;
+public:
+    Personnel(int i, string n, string p, string m) : Personne(i, n, p), metier(m) {}
+    void afficher() {
+        Personne::afficher();
+        cout << "Metier : " << metier << endl;
+    }
+};
 
 int main() {
-    Gestion gestion;
-    
-    // Saisie des étudiants
-    gestion.saisir_etudiant();
-    
-    // Création du fichier des étudiants
-    gestion.creer_fichier();
-    
-    // Affichage des étudiants réussis
-    gestion.etudiants_reussis();
-    
-    // Affichage du contenu du fichier res.txt
-    gestion.Affiche();
-    
+    // Test de la classe Etudiant
+    Etudiant etudiant1(1, "Durand", "Jean");
+    etudiant1.ajouterNote("Francais",12.5, 14.0);
+    etudiant1.ajouterNote("Maths",15.0, 16.5);
+    etudiant1.afficher();
+    Etudiant etudiant2(2, "Jhon", "smith");
+    etudiant2.ajouterNote("Francais",15.5, 19.0);
+    etudiant2.ajouterNote("Maths",18.0, 18.5);
+    etudiant2.afficher();
+    cout<< endl;
+
+    Gestion supcom;
+    supcom.creer_fichier();
+
+
+
     return 0;
 }
+
+
+
