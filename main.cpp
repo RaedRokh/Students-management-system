@@ -145,6 +145,7 @@ void Gestion::charger_fichier() {
     } else {
         cerr << "Erreur : impossible de charger le fichier." << endl;
     }
+    etudiants.clear();
 }
 void Gestion::saisir_etudiant() {
     int nb_etudiants;
@@ -188,11 +189,16 @@ void Gestion::saisir_etudiant() {
 }
 
 void Gestion::creer_fichier() {
-    ofstream fichier("etudiants.txt");
+        if (etudiants.empty()) {
+        cout << "Aucun etudiant a ecrire dans le fichier etudiants.txt." << endl;
+        return;
+       
+    }
+    ofstream fichier("etudiants.txt", ios::out);
 
     if (fichier) {
         for (Etudiant& etudiant : etudiants) {
-            cout << etudiant.getId() << endl;
+            cout << "test" << endl;
             fichier << etudiant.getId() << " " << etudiant.getNom() << " " << etudiant.getPrenom() << " ";
             for (Note& note : etudiant.getNote()) {
                 fichier <<note.getMatiereNom()<< " " << note.getNoteControle() << " " << note.getNoteExamen() << " " <<etudiant.Moyenne() << " ";
@@ -208,15 +214,17 @@ void Gestion::creer_fichier() {
 }
 
 void Gestion::etudiants_reussis() {
-    ifstream fichier("res.txt");
+    if (etudiants.empty()) {
+        cout << "Aucun etudiant a ecrire dans le fichier res.txt." << endl;
+        return;
+       
+    }
+    ifstream fichier1("res.txt");
 
-    if (fichier) {
-        // On vide le vecteur d'étudiants pour éviter d'avoir des doublons
-        etudiants.clear();
-
+    if (fichier1) {
         // Lecture du fichier ligne par ligne
         string ligne;
-        while (getline(fichier, ligne)) {
+        while (getline(fichier1, ligne)) {
             stringstream ss(ligne);
             int id;
             string nom, prenom;
@@ -232,14 +240,11 @@ void Gestion::etudiants_reussis() {
                 // Ajout de l'étudiant au vecteur d'étudiants
             etudiants.push_back(etudiant);
         }
-        fichier.close(); // closing the file inside the if block
-    } else {
-        cerr << "Erreur : impossible de lire le fichier." << endl;
-    }
+        fichier1.close(); // closing the file inside the if block
+    } 
+    else {
+        cerr << "Erreur : impossible de lire le fichier." << endl;}
 
-
-
-    
     ofstream fichier("res.txt");
     
     if (fichier) {
@@ -314,6 +319,7 @@ int main() {
     etudiant_ptr->ajouterNote("maths",14,12);
     etudiant_ptr->ajouterNote("francais",18,12);
     personnes[3]->afficher();
+
 
 
     Gestion supcom;

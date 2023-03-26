@@ -1,18 +1,19 @@
- // string ligne;
-        //     while (getline(fichier, ligne)) {
-        //         stringstream ss(ligne);
-        //         int id;
-        //         string nom, prenom;
-        //         ss >> id >> nom >> prenom;
-        //         Etudiant etudiant(id, nom, prenom);
+void Gestion::creer_fichier() {
+    ofstream fichier("etudiants.txt", ios::out);
 
-        //         // Lecture des notes de l'étudiant
-        //         string matiere;
-        //         double note_controle, note_examen, moyenne;
-        //         while (ss >> matiere >> note_controle >> note_examen >> moyenne) {
-        //             etudiant.ajouterNote(matiere, note_controle, note_examen);
-        //         }
+    if (fichier) {
+        for (Etudiant& etudiant : etudiants) {
+            cout << "test" << endl;
+            fichier << etudiant.getId() << " " << etudiant.getNom() << " " << etudiant.getPrenom() << " ";
+            for (Note& note : etudiant.getNote()) {
+                fichier <<note.getMatiereNom()<< " " << note.getNoteControle() << " " << note.getNoteExamen() << " " <<etudiant.Moyenne() << " ";
+            }
+            fichier << endl;
+        }
 
-        //         // Ajout de l'étudiant au vecteur d'étudiants
-        //         etudiants.push_back(etudiant);
-        //     };
+        fichier.close();
+        cout << "Le fichier a ete cree avec succes." << endl;
+    } else {
+        cerr << "Erreur : impossible de creer le fichier." << endl;
+    }
+}
