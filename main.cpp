@@ -344,7 +344,13 @@ int main() {
 
         // read the user's choice
         cout << "Votre choix : ";
-        cin >> choix;
+       if (!(cin >> choix)) {
+    // input failed to read as an integer, handle error
+    cin.clear(); // clear the input stream's error state
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard remaining characters in the input buffer
+    cerr << "Erreur : choix invalide" << endl;
+    continue; // go back to the top of the loop
+    }
 
         switch (choix) {
             case 1:
