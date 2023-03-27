@@ -293,7 +293,7 @@ void Gestion::etudiants_reussis() {
                 // Ajout de l'étudiant au vecteur d'étudiants
             etudiants.push_back(etudiant);
         }
-        fichier1.close(); // closing the file inside the if block
+        fichier1.close(); 
     } 
     else {
         cerr << "Erreur : impossible de lire le fichier." << endl;}
@@ -362,26 +362,24 @@ public:
 };
 
 int main() {
-    // Personne* personnes[4];
 
-    // personnes[1] = new Professeur(2, "Martin", "Jean", "Mathematiques");
-    // personnes[1]->afficher();
-    // personnes[2] = new Personnel(3, "Lefevre", "Marie", "Ressources Humaines");
-    // personnes[2]->afficher();
-    // personnes[3] = new Etudiant(1, "Jhon", "batiste");
-    // Etudiant* etudiant_ptr = dynamic_cast<Etudiant*>(personnes[3]);
-    // etudiant_ptr->ajouterNote("maths",14,12);
-    // etudiant_ptr->ajouterNote("francais",18,12);
-    // personnes[3]->afficher();
+    // Question 6: 
+    Personne* personnes[4];
+    personnes[1] = new Professeur(2, "Will", "Smith", "Mathematiques");
+    personnes[1]->afficher();
+    personnes[2] = new Personnel(3, "Lefevre", "Marie", "Ressources Humaines");
+    personnes[2]->afficher();
+    personnes[3] = new Etudiant(1, "Jhon", "batiste");
+    Etudiant* etudiant_ptr = dynamic_cast<Etudiant*>(personnes[3]);
+    etudiant_ptr->ajouterNote("Mathematiques",14,12);
+    etudiant_ptr->ajouterNote("Francais",18,12);
+    personnes[3]->afficher();
 
   Gestion gestion;
     int choix = 0;
 
     do {
-        // clear the console screenX
-
-
-        // print the ASCII interface
+        // Ecrire l'interface en code ASCII
         cout << "+-------------------------------------------+" << endl;
         cout << "|          GESTION DES ETUDIANTS            |" << endl;
         cout << "+-------------------------------------------+" << endl;
@@ -395,12 +393,12 @@ int main() {
         cout << "+-------------------------------------------+" << endl;
         cout << endl;
 
-        // read the user's choice
+        // Lire le choix de l'utilisateur
         cout << "Votre choix : ";
        if (!(cin >> choix)) {
-    // input failed to read as an integer, handle error
-    cin.clear(); // clear the input stream's error state
-    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard remaining characters in the input buffer
+    // Gestion d'erreur si l'entree de l'utilisateur n'est pas un entier de 1 à 5
+    cin.clear(); 
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
     cerr << "Erreur : choix invalide" << endl;
     continue; // go back to the top of the loop
     }
@@ -431,7 +429,7 @@ int main() {
                 break;
         }
 
-        // pause the program to let the user read the output
+        //Pauser le programmer pour que l'utilisateur puisse lire le résultat de l'output
         cout << endl << "Appuyez sur une touche pour continuer...";
         cin.get();
         cin.ignore();
