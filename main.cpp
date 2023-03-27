@@ -1,66 +1,96 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <limits>
 #include <fstream>
 #include <algorithm>
 #include <sstream>
 #include <iomanip>
 using namespace std;
+// Déclaration de la classe Personne
 class Personne {
 protected:
-    int id;
-    string nom;
-    string prenom;
+    int id; // identifiant
+    string nom; // nom
+    string prenom; // prénom
 public:
+    // Constructeur avec initialisation de la classe
     Personne(int i, string n, string p) : id(i), nom(n), prenom(p) { }
+    
+    // Méthode pour afficher les informations de la personne
     virtual void afficher() {
         cout << "Identifiant : " << id << endl;
         cout << "Nom : " << nom << endl;
         cout << "Prenom : " << prenom << endl;
     }
-    
-};
+}; // fin de la classe Personne
 
+
+// Déclaration de la classe Note
 class Note {
 public:
-    Note(string matiere,double ncc, double nex);
+    // Constructeur de la classe Note
+    Note(string matiere, double ncc, double nex);
+    
+    // Méthode pour obtenir le nom de la matière
     string getMatiereNom() const;
+    
+    // Méthode pour obtenir la note de contrôle continu
     double getNoteControle() const;
+    
+    // Méthode pour obtenir la note d'examen
     double getNoteExamen() const;
 
 private:
-    string matiere; //nom de la matiere
-    double ncc;  // note de contrôle continu
-    double nex;  // note d'examen
-};
+    string matiere; // Nom de la matière
+    double ncc;     // Note de contrôle continu
+    double nex;     // Note d'examen
+}; // fin de la classe Note
 
-Note::Note(string matiere,double ncc, double nex) :matiere(matiere), ncc(ncc), nex(nex) {}
 
+// Constructeur de la classe Note avec initialisation des variables membres
+Note::Note(string matiere, double ncc, double nex) : matiere(matiere), ncc(ncc), nex(nex) {}
+
+
+// Méthode pour obtenir le nom de la matière
 string Note::getMatiereNom() const {
-    return matiere;
+    return matiere; // renvoie le nom de la matière
 }
+
+// Méthode pour obtenir la note de contrôle continu
 double Note::getNoteControle() const {
-    return ncc;
+    return ncc; // renvoie la note de contrôle continu
 }
 
+// Méthode pour obtenir la note d'examen
 double Note::getNoteExamen() const {
-    return nex;
+    return nex; // renvoie la note d'examen
 }
 
+// Classe pour représenter un étudiant, héritant de la classe Personne
 class Etudiant : public Personne {
 public:
+    // Constructeur prenant en paramètre l'identifiant, le nom et le prénom de l'étudiant
     Etudiant(int i, string n, string p): Personne(i, n, p) {
         
     };
+    // Méthode pour obtenir l'identifiant de l'étudiant
     int getId() const;
+    // Méthode pour obtenir le nom de l'étudiant
     string getNom() const;
+    // Méthode pour obtenir le prénom de l'étudiant
     string getPrenom() const;
+    // Méthode pour obtenir la liste des notes de l'étudiant
     vector<Note> getNote() const;
+    // Méthode pour ajouter une note à la liste des notes de l'étudiant
     void ajouterNote(string matiere,double ncc, double nex);
+    // Méthode pour calculer la moyenne de l'étudiant
     double Moyenne() const;
+    // Méthode pour afficher les informations de l'étudiant
     void afficher();
 
 private:
+    // Vecteur contenant les notes de l'étudiant
     vector<Note> notes;
 };
 
@@ -82,14 +112,16 @@ double Etudiant::Moyenne() const {
     double sommeNcc = 0.0;
     double sommeNex = 0.0;
     for (const auto& note : notes) {
-        sommeNcc += note.getNoteControle();
-        sommeNex += note.getNoteExamen();
+        sommeNcc += note.getNoteControle(); // Ajoute la note de contrôle continu à la somme des notes de contrôle continu
+        sommeNex += note.getNoteExamen(); // Ajoute la note d'examen à la somme des notes d'examen
     }
     if (notes.size() > 0) {
-        moyenne = (sommeNcc / notes.size()) * 0.3 + (sommeNex / notes.size()) * 0.7;
+        moyenne = (sommeNcc / notes.size()) * 0.3 + (sommeNex / notes.size()) * 0.7; // Calcule la moyenne pondérée des notes de contrôle continu et d'examen
+        // La pondération est de 30% pour les notes de contrôle continu et de 70% pour les notes d'examen
     }
-    return moyenne;
+    return moyenne; // Retourne la moyenne calculée
 }
+
 void Etudiant::afficher() {
     Personne::afficher();
     cout << "Moyenne : " << Moyenne() << endl;
@@ -98,8 +130,8 @@ vector<Note> Etudiant::getNote() const {
     return notes;
 }
 
-void Etudiant::ajouterNote(string matiere,double ncc, double nex) {
-   
+void Etudiant::ajouterNote(string matiere, double ncc, double nex) {
+    // Crée une nouvelle note avec les paramètres fournis et l'ajoute au vecteur de notes de l'étudiant.
     notes.push_back(Note(matiere, ncc, nex));
 }
 
@@ -115,8 +147,10 @@ private:
     vector<Etudiant> etudiants;
 };
 void Gestion::charger_fichier() {
+    // Ouvre le fichier "etudiants.txt"
     ifstream fichier("etudiants.txt");
 
+    // Si le fichier a été ouvert avec succès
     if (fichier) {
         // On vide le vecteur d'étudiants pour éviter d'avoir des doublons
         etudiants.clear();
@@ -124,16 +158,22 @@ void Gestion::charger_fichier() {
         // Lecture du fichier ligne par ligne
         string ligne;
         while (getline(fichier, ligne)) {
+            // Utilise un stringstream pour lire les informations de l'étudiant depuis la ligne lue
             stringstream ss(ligne);
+
+            // Lecture de l'identifiant, du nom et du prénom de l'étudiant
             int id;
             string nom, prenom;
             ss >> id >> nom >> prenom;
+
+            // Création d'un objet Etudiant avec les informations lues
             Etudiant etudiant(id, nom, prenom);
 
             // Lecture des notes de l'étudiant
             string matiere;
             double note_controle, note_examen,moyenne;
             while (ss >> matiere >> note_controle >> note_examen >> moyenne) {
+                // Ajoute les notes à l'étudiant
                 etudiant.ajouterNote(matiere, note_controle, note_examen);
             }
 
@@ -141,16 +181,21 @@ void Gestion::charger_fichier() {
             etudiants.push_back(etudiant);
         }
 
+        // Ferme le fichier
         fichier.close();
         cout << "Le fichier a ete charge avec succes." << endl;
     } else {
+        // Si le fichier n'a pas pu être ouvert, affiche un message d'erreur
         cerr << "Erreur : impossible de charger le fichier." << endl;
     }
+
+    // Vide le vecteur d'étudiants pour éviter d'avoir des doublons
     etudiants.clear();
 }
+
 void Gestion::saisir_etudiant() {
     int nb_etudiants;
-    cout << "Combien d'etudiants voulez-vous ajouter ? ";
+    cout << "Combien d\'etudiants voulez-vous ajouter ? ";
     cin >> nb_etudiants;
 
     for (int i = 0; i < nb_etudiants; i++) {
@@ -159,14 +204,12 @@ void Gestion::saisir_etudiant() {
         cout << "Etudiant " << i+1 << endl;
         cout << "ID : ";
         cin >> id;
-        
-        // Ajouter l'objet à la liste des personnes
-       
         cout << "Nom : ";
         cin >> nom;
         cout << "Prenom : ";
         cin >> prenom;
         Etudiant etudiant(id, nom, prenom);
+        // Boucle pour ajouter des notes à l'étudiant
         for (int i = 0; i < 10; i++){
             string matiere;
             double ncc, nex;
@@ -175,44 +218,53 @@ void Gestion::saisir_etudiant() {
             cin >> matiere;
             cout << "La note de contrôle continu:";
             cin >> ncc;
-            cout << "La note d’examen:";
+            cout << "La note d\'examen:";
             cin >> nex;
             etudiant.ajouterNote(matiere, ncc , nex);
-            
-            cout << "Voulez vous ajouter d'autres matieres? (o/n)";
+             // Demander à l'utilisateur s'il veut ajouter d'autres matières
+            cout << "Voulez vous ajouter d\'autres matieres? (o/n)";
             cin >> rep;
             if (rep == "n") {
-                break;
+                break;// Sortir de la boucle si l'utilisateur ne veut plus ajouter de matières
             }
         }
+        // Ajouter l'objet à la liste des personnes
         etudiants.push_back(etudiant);
     }
 }
 
 void Gestion::creer_fichier() {
-        if (etudiants.empty()) {
+    // Vérifie si le vecteur d'étudiants est vide
+    if (etudiants.empty()) {
         cout << "Aucun etudiant a ecrire dans le fichier etudiants.txt." << endl;
         return;
-       
     }
+
+    // Ouvre le fichier en mode ajout
     ofstream fichier("etudiants.txt",ios::app);
 
+    // Vérifie si l'ouverture du fichier a réussi
     if (fichier) {
+        // Parcourt tous les étudiants stockés dans le vecteur
         for (Etudiant& etudiant : etudiants) {
-            cout << "test" << endl;
+            // Écrit l'ID, le nom et le prénom de l'étudiant dans le fichier
             fichier << etudiant.getId() << " " << etudiant.getNom() << " " << etudiant.getPrenom() << " ";
+
+            // Parcourt toutes les notes de l'étudiant
             for (Note& note : etudiant.getNote()) {
+                // Écrit le nom de la matière, la note de contrôle continu, la note d'examen et la moyenne dans le fichier
                 fichier <<note.getMatiereNom()<< " " << note.getNoteControle() << " " << note.getNoteExamen() << " " <<etudiant.Moyenne() << " ";
             }
-            fichier << endl;
+            fichier << endl; // Passe à la ligne suivante pour le prochain étudiant
         }
 
-        fichier.close();
+        fichier.close(); // Ferme le fichier
         cout << "Le fichier a ete cree avec succes." << endl;
     } else {
         cerr << "Erreur : impossible de creer le fichier." << endl;
     }
 }
+
 
 void Gestion::etudiants_reussis() {
     if (etudiants.empty()) {
@@ -270,6 +322,7 @@ void Gestion::etudiants_reussis() {
     } else {
         cerr << "Erreur : impossible de creer le fichier." << endl;
     }
+    etudiants.clear();
 }
 
 void Gestion::Affiche() {
